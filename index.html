@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Synco Numbering System</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <style>
+  body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f2f2f2;
+  padding: 30px;
+  text-align: center;
+  overflow-x: auto; /* سكرول أفقي للبادي */
+  margin: 0;
+  color: #333;
+  font-size: 13px;
+}
+
+.logo {
+  font-size: 36px;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 25px;
+  user-select: none;
+}
+
+.button-group {
+  margin-bottom: 20px;
+}
+
+.button-group button {
+  margin: 0 10px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-weight: 600;
+  box-shadow: 0 3px 7px rgba(0,0,0,0.1);
+}
+
+.btn-new { background-color: #3498db; }
+.btn-edit { background-color: #27ae60; }
+.btn-show { background-color: #7f8c8d; }
+.btn-import { background-color: #9b59b6; }
+.btn-export { background-color: #e67e22; }
+.btn-delete { background-color: #e74c3c; }
+
+.btn-new:hover { background-color: #2980b9; }
+.btn-edit:hover { background-color: #1e8449; }
+.btn-show:hover { background-color: #626e70; }
+.btn-import:hover { background-color: #8e44ad; }
+.btn-export:hover { background-color: #d35400; }
+.btn-delete:hover { background-color: #c0392b; }
+
+.table-container {
+  overflow-x: auto;
+  margin-top: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  border-radius: 10px;
+  background-color: white;
+  padding: 15px;
+}
+
+table {
+  min-width: 3500px; /* وسع الجدول شوي */
+  border-collapse: collapse;
+  width: 100%;
+  user-select: none;
+}
+
+thead tr {
+  background-color: #2980b9;
+  color: white;
+  font-weight: 300;
+  font-size: 13px;
+}
+
+th, td {
+  padding: 12px 14px; /* زود padding */
+  border: 1px solid #ddd;
+  text-align: center;
+  vertical-align: middle;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+tbody tr:hover {
+  background-color: #f1f9ff;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+input[type="text"], select, input[type="date"] {
+  width: 100%;
+  padding: 7px 10px;
+  font-size: 12px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+  transition: border-color 0.25s ease;
+}
+
+input[type="text"]:focus, select:focus, input[type="date"]:focus {
+  outline: none;
+  border-color: #2980b9;
+  background-color: #eaf6ff;
+}
+
+#editSection {
+  display: none;
+  margin-top: 20px;
+  padding: 25px;
+  background-color: #fff;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.15);
+  max-width: 850px; /* وسع منطقة التعديل */
+  margin-left: auto;
+  margin-right: auto;
+  text-align: left;
+  border-radius: 10px;
+  user-select: text;
+}
+
+#editSection h3 {
+  margin-top: 0;
+  color: #34495e;
+  font-weight: 700;
+  font-size: 22px;
+}
+
+#editSection table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+#editSection td {
+  padding: 12px 15px;
+  font-size: 16px;
+  vertical-align: middle;
+}
+
+#editSection input, #editSection select, #editSection input[type="date"] {
+  width: 100%;
+  font-size: 16px;
+  padding: 8px 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+#editSection input:focus, #editSection select:focus, #editSection input[type="date"]:focus {
+  border-color: #2980b9;
+  background-color: #eaf6ff;
+  outline: none;
+}
+
+  </style>
+</head>
+<body>
+  <h1 class="logo">Synco Numbering System</h1>
+  <div class="button-group">
+    <button class="btn-new" onclick="addNewRow()"><i class="fas fa-plus"></i> New Document</button>
+    <button class="btn-edit" onclick="toggleEditSection()"><i class="fas fa-pen"></i> Edit Document</button>
+    <button class="btn-show" onclick="showAll()"><i class="fas fa-table"></i> Show All</button>
+    <button class="btn-import" onclick="document.getElementById('importFile').click()"><i class="fas fa-file-import"></i> Import Excel</button>
+    <button class="btn-export" onclick="exportToExcel()"><i class="fas fa-file-export"></i> Export Excel</button>
+    <button class="btn-delete" onclick="deleteSelectedRows()"><i class="fas fa-trash"></i> Delete Selected</button>
+    <button class="btn-new" onclick="generateDocumentNumbers()"><i class="fas fa-bolt"></i> Generate Numbers</button>
+  </div>
+  <div id="editSection">
+    <h3>Edit Document</h3>
+    <label>Project:</label>
+    <select id="editProject">
+      <option>AL ARRASS</option>
+      <option>AL Ghat</option>
+      <option>AL Khafah</option>
+    </select>
+    <br/><br/>
+    <input type="text" id="editDocNo" placeholder="Enter Doc No. to Edit" />
+    <button onclick="loadDocument()">Load</button>
+    <table style="margin-top:10px; width: 100%;">
+      <tbody id="editTableBody"></tbody>
+    </table>
+    <button onclick="saveEdit()">Save</button>
+    <button onclick="cancelEdit()">Cancel</button>
+  </div>
+  <input type="file" id="importFile" style="display:none" />
+  <div class="table-container">
+    <table id="dataTable">
+      <thead>
+        <tr>
+          <th><input type="checkbox" id="selectAll" onclick="toggleSelectAll(this)" /></th>
+          <th>Project Name</th>
+          <th>Originator</th>
+          <th>Originator Type</th>
+          <th>Department</th>
+          <th>Discipline</th>
+          <th>Section</th>
+          <th>DMS Purpose</th>
+          <th>Weight Rank</th>
+          <th>Doc Size</th>
+          <th>Subject</th>
+          <th>Document No</th>
+          <th>Standard No</th>
+          <th>Internal Planned Date</th>
+          <th>Client Planned Date</th>
+          <th>Submit To Entity</th>
+          <th>Rev No</th>
+          <th>Last Status</th>
+          <th>Doc Owner</th>
+          <th>Order From Code</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
+
+  <script>
+    let currentEditRow = null;
+
+    let dropdownData = null;
+    fetch('json/Dropdowns.json')
+      .then(res => res.json())
+      .then(data => {
+        dropdownData = data;
+      });
+
+    function createDropdown(options, selected = '') {
+      return `<select>${options.map(opt => `<option ${opt === selected ? 'selected' : ''}>${opt}</option>`).join('')}</select>`;
+    }
+
+    function getUniqueValues(key) {
+      if (!dropdownData) return [];
+      return [...new Set(dropdownData.map(item => (item[key] || '').trim()).filter(v => v))];
+    }
+
+  function createRow(data = {}) {
+  const originators = getUniqueValues('Originator');
+  const originatorTypes = getUniqueValues('Originator Type');
+  const departments = getUniqueValues('Department');
+  const disciplines = getUniqueValues('Discipline');
+  const sections = getUniqueValues('Section');  // هنا جلب القيم الخاصة بالقسم من JSON كدروبداون
+  const dmsPurposes = getUniqueValues('DMS Purpose');
+  const weightRanks = getUniqueValues('Weight Rank');
+  const docSizes = ['A', 'B', 'C', 'D', 'F'];
+  const projects = ['AL ARRASS', 'AL Ghat', 'AL Khafah'];
+
+  // قيم الأعمدة مع قيمة افتراضية
+  const project = data.project || 'AL ARRASS';
+  const originator = data.originator || '';
+  const originatorType = data.originatorType || '';
+  const department = data.department || '';
+  const discipline = data.discipline || '';
+  const section = data.section || '';
+  const dmsPurpose = data.dmsPurpose || '';
+  const weightRank = data.weightRank || '';
+  const docSize = data.docSize || '';
+  const subject = data.subject || '';
+  const docNo = data.docNo || '';
+  const standardNo = data.standardNo || '';
+  const internalPlannedDate = data.internalPlannedDate || '';
+  const clientPlannedDate = data.clientPlannedDate || '';
+  const submitToEntity = data.submitToEntity || '';
+  const revNo = data.revNo || '0';  // افتراضياً 0
+  const lastStatus = data.lastStatus || '';
+  const docOwner = originator;  // دائماً نفس قيمة originator
+  const orderFromCode = data.orderFromCode || '';
+
+  return `
+    <tr>
+      <td><input type="checkbox" class="rowCheckbox" /></td>
+      <td>
+        <select>
+          ${projects.map(p => `<option ${p === project ? 'selected' : ''}>${p}</option>`).join('')}
+        </select>
+      </td>
+      <td>
+        <select class="originatorSelect">
+          ${originators.map(o => `<option ${o === originator ? 'selected' : ''}>${o}</option>`).join('')}
+        </select>
+      </td>
+      <td>${createDropdown(originatorTypes, originatorType)}</td>
+      <td>${createDropdown(departments, department)}</td>
+      <td>${createDropdown(disciplines, discipline)}</td>
+      <td>
+        <select>
+          ${sections.map(s => `<option ${s === section ? 'selected' : ''}>${s}</option>`).join('')}
+        </select>
+      </td>
+      <td>${createDropdown(dmsPurposes, dmsPurpose)}</td>
+      <td>${createDropdown(weightRanks, weightRank)}</td>
+      <td>${createDropdown(docSizes, docSize)}</td>
+      <td><input type="text" value="${subject}" /></td>
+      <td><input type="text" value="${docNo}" /></td>
+      <td><input type="text" value="${standardNo}" /></td>
+      <td><input type="date" value="${internalPlannedDate}" /></td>
+      <td><input type="date" value="${clientPlannedDate}" /></td>
+      <td><input type="text" value="${submitToEntity}" /></td>
+      <td><input type="text" value="${revNo}" readonly /></td>  <!-- مقفولة -->
+      <td><input type="text" value="${lastStatus}" /></td>
+      <td><input type="text" value="${docOwner}" readonly /></td> <!-- مقفولة -->
+      <td><input type="text" value="${orderFromCode}" /></td>
+    </tr>
+  `;
+}
+
+
+function bindOriginatorChange() {
+  document.querySelectorAll('.originatorSelect').forEach(select => {
+    select.addEventListener('change', e => {
+      const tr = e.target.closest('tr');
+      if (!tr) return;
+
+      const originatorValue = e.target.value;
+
+      // 1. تحديث Doc Owner
+      const docOwnerInput = tr.querySelector('td:nth-child(19) input'); // Doc Owner
+      if (docOwnerInput) docOwnerInput.value = originatorValue;
+
+      // 2. تحديث Order From Code بناءً على Originator
+      const orderFromCodeInput = tr.querySelector('td:nth-child(20) input'); // Order From Code
+      if (orderFromCodeInput) {
+        let code = '';
+        if (originatorValue === "GE ENERGY POWER CONVERSION FRANCE SAS") code = "GEV";
+        else if (originatorValue === "EEPSP") code = "EEPSP";
+        else if (originatorValue === "Subcontractor") code = "SC1";
+        else if (originatorValue === "Supplier") code = "SP1";
+        orderFromCodeInput.value = code;
+      }
+      
+    });
+  });
+}
+
+
+// بعد إضافة صف جديد
+function addNewRow() {
+  if (!dropdownData) {
+    alert('Please wait until dropdown data loads.');
+    return;
+  }
+  const rowHTML = createRow();
+  document.getElementById('tableBody').insertAdjacentHTML('beforeend', rowHTML);
+  bindOriginatorChange(); // اربط event لكل صف جديد
+  
+}
+
+
+function importExcelRows(jsonData) {
+  const tbody = document.getElementById('tableBody');
+  tbody.innerHTML = '';
+  jsonData.forEach(rowData => {
+    const rowHTML = createRow({
+      project: rowData['Project Name'],
+      originator: rowData['Originator'],
+      originatorType: rowData['Originator Type'],
+      department: rowData['Department'],
+      discipline: rowData['Discipline'],
+      section: rowData['Section'],
+      dmsPurpose: rowData['DMS Purpose'],
+      weightRank: rowData['Weight Rank'],
+      docSize: rowData['Doc Size'],
+      subject: rowData['Subject'],
+      docNo: rowData['Document No'],
+      standardNo: rowData['Standard No'],
+      internalPlannedDate: rowData['Internal Planned Date'] ? new Date(rowData['Internal Planned Date']).toISOString().slice(0,10) : '',
+      clientPlannedDate: rowData['Client Planned Date'] ? new Date(rowData['Client Planned Date']).toISOString().slice(0,10) : '',
+      submitToEntity: rowData['Submit To Entity'],
+      revNo: rowData['Rev No'],
+      lastStatus: data.lastStatus || 'Not Issued',
+      docOwner: rowData['Doc Owner'],
+      orderFromCode: rowData['Order From Code'],
+    });
+    tbody.insertAdjacentHTML('beforeend', rowHTML);
+    const newRow = tbody.lastElementChild;
+    bindOriginatorChange(newRow);
+  });
+}
+
+// عند تحميل JSON Dropdowns من الأول
+fetch('json/Dropdowns.json')
+  .then(res => res.json())
+  .then(data => {
+    dropdownData = data;
+    // ممكن تضيف هنا تهيئة الجدول لو حابب تبدأ بصف جديد
+  });
+
+  function generateDocumentNumbers() {
+  const rows = document.querySelectorAll("#tableBody tr");
+  rows.forEach(row => {
+    const docSizeSelect = row.children[9].querySelector("select");  // العمود العاشر
+    const docSize = docSizeSelect ? docSizeSelect.value : '';
+    const docNoInput = row.children[11].querySelector("input");     // العمود 12
+      const standardNo = row.children[12].querySelector("input");     // العمود 13
+
+    if (docSize && docNoInput) {
+      const randomNumber = Math.floor(100000 + Math.random() * 900000); // 6 أرقام
+      docNoInput.value = `C${docSize}-${randomNumber}`;
+      standardNo.value = `C${docSize}-${randomNumber}`;
+    }
+  });
+}
+
+
+  </script>
+</body>
+</html>

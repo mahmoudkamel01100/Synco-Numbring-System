@@ -1,0 +1,110 @@
+[
+  {
+    "Originator": "EEPSP",
+    "Originator Type": "EEPSP",
+    "Department": "Commissioing",
+    "Discipline": "Civil",
+    "Section": "Architecture",
+    "DMS Purpose": " Approval",
+    "Weight Rank": "0"
+  },
+  {
+    "Originator": "GE ENERGY  POWER CONVERSION FRANCE SAS",
+    "Originator Type": "Subcontractor",
+    "Department": "Commissioning",
+    "Discipline": "Commissioning",
+    "Section": "Concrete",
+    "DMS Purpose": "",
+    "Weight Rank": "1"
+  },
+  {
+    "Originator": "Subcontractor",
+    "Originator Type": "Supplier",
+    "Department": "Engineering",
+    "Discipline": "Electrical",
+    "Section": "General",
+    "DMS Purpose": "Information",
+    "Weight Rank": "2"
+  },
+  {
+    "Originator": "Supplier",
+    "Originator Type": "",
+    "Department": "HSE",
+    "Discipline": "General",
+    "Section": "Geotechnical",
+    "DMS Purpose": "Internal",
+    "Weight Rank": "3"
+  },
+  {
+    "Originator": "",
+    "Originator Type": "",
+    "Department": "Planning",
+    "Discipline": "I&C",
+    "Section": "I&C",
+    "DMS Purpose": "",
+    "Weight Rank": "4"
+  },
+  {
+    "Originator": "",
+    "Originator Type": "",
+    "Department": "Project Management",
+    "Discipline": "Mechanical",
+    "Section": "Infrastructure",
+    "DMS Purpose": "",
+    "Weight Rank": "5"
+  },
+  {
+    "Originator": "",
+    "Originator Type": "",
+    "Department": "Quality",
+    "Discipline": "",
+    "Section": "MEP",
+    "DMS Purpose": "",
+    "Weight Rank": "6"
+  },
+  {
+    "Originator": "",
+    "Originator Type": "",
+    "Department": "",
+    "Discipline": "",
+    "Section": "Plant Design",
+    "DMS Purpose": "",
+    "Weight Rank": "7"
+  },
+  {
+    "Originator": "",
+    "Originator Type": "",
+    "Department": "",
+    "Discipline": "",
+    "Section": "Primary",
+    "DMS Purpose": "",
+    "Weight Rank": "8"
+  },
+  {
+    "Originator": "",
+    "Originator Type": "",
+    "Department": "",
+    "Discipline": "",
+    "Section": "Process",
+    "DMS Purpose": "",
+    "Weight Rank": "9"
+  },
+  {
+    "Originator": "",
+    "Originator Type": "",
+    "Department": "",
+    "Discipline": "",
+    "Section": "Secondary",
+    "DMS Purpose": "",
+    "Weight Rank": "10"
+  },
+  {
+    "Originator": "",
+    "Originator Type": "",
+    "Department": "",
+    "Discipline": "",
+    "Section": "Steel",
+    "DMS Purpose": "",
+    "Weight Rank": ""
+  }
+]
