@@ -2,409 +2,406 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Synco Numbering System</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <title>COA Synchronous Condenser</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
-  body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f2f2f2;
-  padding: 30px;
-  text-align: center;
-  overflow-x: auto; /* سكرول أفقي للبادي */
-  margin: 0;
-  color: #333;
-  font-size: 13px;
-}
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f2f2f2;
+      padding: 30px;
+      text-align: center;
+      margin: 0;
+      color: #333;
+      font-size: 13px;
+    }
+    .logo {
+      font-size: 36px;
+      font-weight: 700;
+      color: #2c3e50;
+      margin-bottom: 25px;
+      user-select: none;
+    }
+    .grid-actions {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      max-width: 800px;
+      margin: 0 auto 30px auto;
+    }
+    .action-card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.1);
+      padding: 30px 15px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+    .action-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+    }
+    .action-card i {
+      font-size: 40px;
+      margin-bottom: 10px;
+    }
+    .action-card span {
+      font-weight: 600;
+      font-size: 16px;
+    }
+    .action-add i {color: #27ae60;}
+    .action-edit i {color: #3498db;}
+    .action-delete i {color: #e74c3c;}
+    .action-restore i {color: #f39c12;}
 
-.logo {
-  font-size: 36px;
-  font-weight: 700;
-  color: #2c3e50;
-  margin-bottom: 25px;
-  user-select: none;
-}
+    .filter-box, .container {
+      background-color: #fff;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.1);
+      margin-bottom: 10px;
+      text-align: left;
+      display: none; /* مخفى افتراضياً */
+    }
+    .container {
+      max-width:600px;
+      margin:20px auto;
+    }
+    .textbox-box {
+      margin:15px 0;
+    }
+    .textbox-box label {
+      display:block;
+      font-weight:600;
+      margin-bottom:5px;
+    }
+    .textbox-box input {
+      width:100%;
+      padding:6px;
+      border:1px solid #ccc;
+      border-radius:5px;
+    }
+    .back-btn {
+      padding:6px 14px;
+      background:#3498db;
+      color:#fff;
+      border:none;
+      border-radius:5px;
+      cursor:pointer;
+      font-weight:600;
+    }
 
-.button-group {
-  margin-bottom: 20px;
-}
+    .projects-checkboxes {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+    .projects-checkboxes label {
+      font-weight: 600;
+      font-size: 14px;
+    }
+    .number-docs, .originator-select {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .number-docs label, .originator-select label {
+      font-weight: 600;
+      font-size: 14px;
+    }
+    .number-docs input[type="number"], .originator-select select {
+      padding: 6px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+    .number-docs button {
+      padding: 6px 14px;
+      background-color: #3498db;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .number-docs button:hover {
+      background-color: #2980b9;
+    }
 
-.button-group button {
-  margin: 0 10px;
-  padding: 12px 24px;
-  border: none;
-  border-radius: 8px;
-  font-size: 15px;
-  color: white;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  font-weight: 600;
-  box-shadow: 0 3px 7px rgba(0,0,0,0.1);
-}
-
-.btn-new { background-color: #3498db; }
-.btn-edit { background-color: #27ae60; }
-.btn-show { background-color: #7f8c8d; }
-.btn-import { background-color: #9b59b6; }
-.btn-export { background-color: #e67e22; }
-.btn-delete { background-color: #e74c3c; }
-
-.btn-new:hover { background-color: #2980b9; }
-.btn-edit:hover { background-color: #1e8449; }
-.btn-show:hover { background-color: #626e70; }
-.btn-import:hover { background-color: #8e44ad; }
-.btn-export:hover { background-color: #d35400; }
-.btn-delete:hover { background-color: #c0392b; }
-
-.table-container {
-  overflow-x: auto;
-  margin-top: 20px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  border-radius: 10px;
-  background-color: white;
-  padding: 15px;
-}
-
-table {
-  min-width: 3500px; /* وسع الجدول شوي */
-  border-collapse: collapse;
-  width: 100%;
-  user-select: none;
-}
-
-thead tr {
-  background-color: #2980b9;
-  color: white;
-  font-weight: 300;
-  font-size: 13px;
-}
-
-th, td {
-  padding: 12px 14px; /* زود padding */
-  border: 1px solid #ddd;
-  text-align: center;
-  vertical-align: middle;
-  font-size: 13px;
-  white-space: nowrap;
-}
-
-tbody tr:hover {
-  background-color: #f1f9ff;
-  cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
-}
-
-input[type="text"], select, input[type="date"] {
-  width: 100%;
-  padding: 7px 10px;
-  font-size: 12px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  box-sizing: border-box;
-  transition: border-color 0.25s ease;
-}
-
-input[type="text"]:focus, select:focus, input[type="date"]:focus {
-  outline: none;
-  border-color: #2980b9;
-  background-color: #eaf6ff;
-}
-
-#editSection {
-  display: none;
-  margin-top: 20px;
-  padding: 25px;
-  background-color: #fff;
-  box-shadow: 0 3px 12px rgba(0,0,0,0.15);
-  max-width: 850px; /* وسع منطقة التعديل */
-  margin-left: auto;
-  margin-right: auto;
-  text-align: left;
-  border-radius: 10px;
-  user-select: text;
-}
-
-#editSection h3 {
-  margin-top: 0;
-  color: #34495e;
-  font-weight: 700;
-  font-size: 22px;
-}
-
-#editSection table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-#editSection td {
-  padding: 12px 15px;
-  font-size: 16px;
-  vertical-align: middle;
-}
-
-#editSection input, #editSection select, #editSection input[type="date"] {
-  width: 100%;
-  font-size: 16px;
-  padding: 8px 10px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  box-sizing: border-box;
-}
-
-#editSection input:focus, #editSection select:focus, #editSection input[type="date"]:focus {
-  border-color: #2980b9;
-  background-color: #eaf6ff;
-  outline: none;
-}
-
+    .table-container {
+      overflow-x: auto;
+      margin-top: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      border-radius: 10px;
+      background-color: white;
+      padding: 15px;
+      display: inline-block;
+    }
+    table {
+      border-collapse: collapse;
+      min-width: 1000px;
+      width: 100%;
+      user-select: none;
+    }
+    thead tr {
+      background-color: #2980b9;
+      color: white;
+      font-weight: 300;
+      font-size: 13px;
+    }
+    th, td {
+      padding: 12px 14px;
+      border: 1px solid #ddd;
+      text-align: center;
+      vertical-align: middle;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+    tbody tr:hover {
+      background-color: #f1f9ff;
+      cursor: pointer;
+      transition: background-color 0.2s ease-in-out;
+    }
+    .action-icons i {
+      cursor: pointer;
+      margin: 0 5px;
+      font-size: 15px;
+    }
+    .fa-trash {color:#e74c3c;}
+    .fa-pen {color:#3498db;}
+    .fa-save {color:#27ae60;}
+    select.doc-size {
+      padding:4px;
+      font-size:13px;
+      border-radius:5px;
+      border:1px solid #ccc;
+    }
+    
   </style>
 </head>
 <body>
-  <h1 class="logo">Synco Numbering System</h1>
-  <div class="button-group">
-    <button class="btn-new" onclick="addNewRow()"><i class="fas fa-plus"></i> New Document</button>
-    <button class="btn-edit" onclick="toggleEditSection()"><i class="fas fa-pen"></i> Edit Document</button>
-    <button class="btn-show" onclick="showAll()"><i class="fas fa-table"></i> Show All</button>
-    <button class="btn-import" onclick="document.getElementById('importFile').click()"><i class="fas fa-file-import"></i> Import Excel</button>
-    <button class="btn-export" onclick="exportToExcel()"><i class="fas fa-file-export"></i> Export Excel</button>
-    <button class="btn-delete" onclick="deleteSelectedRows()"><i class="fas fa-trash"></i> Delete Selected</button>
-    <button class="btn-new" onclick="generateDocumentNumbers()"><i class="fas fa-bolt"></i> Generate Numbers</button>
+  <h1 class="logo">COA Synchronous Condenser</h1>
+
+  <!-- الأزرار -->
+  <div class="grid-actions">
+    <div class="action-card action-add" onclick="toggleFilterBox()">
+      <i class="fa fa-plus"></i><span>Add</span>
+    </div>
+    <div class="action-card action-edit" onclick="showContainer('editContainer')">
+      <i class="fa fa-pen"></i><span>Edit</span>
+    </div>
+    <div class="action-card action-delete" onclick="showContainer('deleteContainer')">
+      <i class="fa fa-trash"></i><span>Delete</span>
+    </div>
+    <div class="action-card action-restore" onclick="showContainer('restoreContainer')">
+      <i class="fa fa-rotate-left"></i><span>Restore</span>
+    </div>
   </div>
-  <div id="editSection">
-    <h3>Edit Document</h3>
-    <label>Project:</label>
-    <select id="editProject">
-      <option>AL ARRASS</option>
-      <option>AL Ghat</option>
-      <option>AL Khafah</option>
-    </select>
-    <br/><br/>
-    <input type="text" id="editDocNo" placeholder="Enter Doc No. to Edit" />
-    <button onclick="loadDocument()">Load</button>
-    <table style="margin-top:10px; width: 100%;">
-      <tbody id="editTableBody"></tbody>
-    </table>
-    <button onclick="saveEdit()">Save</button>
-    <button onclick="cancelEdit()">Cancel</button>
+
+  <!-- الفلتر بوكس -->
+  <div class="filter-box" id="filterBox">
+    <div class="projects-checkboxes">
+      <label><input type="checkbox" name="projectFilter" value="ARRASS"> ARRASS</label>
+      <label><input type="checkbox" name="projectFilter" value="AL GHAT"> AL GHAT</label>
+      <label><input type="checkbox" name="projectFilter" value="AL Khafah"> AL Khafah</label>
+      <label><input type="checkbox" name="projectFilter" value="All"> All Projects</label>
+    </div>
+    <div class="originator-select">
+      <label for="originator">Originator:</label>
+      <select id="originator">
+        <option value="">-- Select Originator --</option>
+      </select>
+    </div>
+    <div class="number-docs">
+      <label for="numDocs">Number Of Docs:</label>
+      <input type="number" id="numDocs" min="1" max="100" value="1" />
+      <button onclick="generateRowsBySelection()">Generate</button>
+    </div>
   </div>
-  <input type="file" id="importFile" style="display:none" />
-  <div class="table-container">
+
+  <!-- الكونتينرات -->
+  <div class="container" id="editContainer">
+    <h2>Edit Document</h2>
+    <div class="textbox-box">
+      <label>Doc No:</label>
+      <input type="text" placeholder="Enter Doc No">
+    </div>
+    <button class="back-btn" onclick="backToMain()">Back</button>
+  </div>
+
+  <div class="container" id="deleteContainer">
+    <h2>Delete Document</h2>
+    <div class="textbox-box">
+      <label>Doc No:</label>
+      <input type="text" placeholder="Enter Doc No">
+    </div>
+    <button class="back-btn" onclick="backToMain()">Back</button>
+  </div>
+
+  <div class="container" id="restoreContainer">
+    <h2>Restore Document</h2>
+    <div class="textbox-box">
+      <label>Doc No:</label>
+      <input type="text" placeholder="Enter Doc No">
+    </div>
+    <button class="back-btn" onclick="backToMain()">Back</button>
+  </div>
+
+  <!-- الجدول -->
+  <div class="table-container" id="mainTable">
     <table id="dataTable">
       <thead>
         <tr>
-          <th><input type="checkbox" id="selectAll" onclick="toggleSelectAll(this)" /></th>
+          <th>Actions</th>
           <th>Project Name</th>
           <th>Originator</th>
           <th>Originator Type</th>
           <th>Department</th>
           <th>Discipline</th>
           <th>Section</th>
-          <th>DMS Purpose</th>
-          <th>Weight Rank</th>
           <th>Doc Size</th>
+          <th>Doc No.</th>
           <th>Subject</th>
-          <th>Document No</th>
-          <th>Standard No</th>
+          <th>Purpose</th>
           <th>Internal Planned Date</th>
           <th>Client Planned Date</th>
           <th>Submit To Entity</th>
-          <th>Rev No</th>
-          <th>Last Status</th>
-          <th>Doc Owner</th>
           <th>Order From Code</th>
+          <th>Order To Code</th>
         </tr>
       </thead>
       <tbody id="tableBody"></tbody>
     </table>
   </div>
 
-  <script>
-    let currentEditRow = null;
-
-    let dropdownData = null;
-    fetch('json/Dropdowns.json')
-      .then(res => res.json())
-      .then(data => {
-        dropdownData = data;
-      });
-
-    function createDropdown(options, selected = '') {
-      return `<select>${options.map(opt => `<option ${opt === selected ? 'selected' : ''}>${opt}</option>`).join('')}</select>`;
-    }
-
-    function getUniqueValues(key) {
-      if (!dropdownData) return [];
-      return [...new Set(dropdownData.map(item => (item[key] || '').trim()).filter(v => v))];
-    }
-
-  function createRow(data = {}) {
-  const originators = getUniqueValues('Originator');
-  const originatorTypes = getUniqueValues('Originator Type');
-  const departments = getUniqueValues('Department');
-  const disciplines = getUniqueValues('Discipline');
-  const sections = getUniqueValues('Section');  // هنا جلب القيم الخاصة بالقسم من JSON كدروبداون
-  const dmsPurposes = getUniqueValues('DMS Purpose');
-  const weightRanks = getUniqueValues('Weight Rank');
-  const docSizes = ['A', 'B', 'C', 'D', 'F'];
-  const projects = ['AL ARRASS', 'AL Ghat', 'AL Khafah'];
-
-  // قيم الأعمدة مع قيمة افتراضية
-  const project = data.project || 'AL ARRASS';
-  const originator = data.originator || '';
-  const originatorType = data.originatorType || '';
-  const department = data.department || '';
-  const discipline = data.discipline || '';
-  const section = data.section || '';
-  const dmsPurpose = data.dmsPurpose || '';
-  const weightRank = data.weightRank || '';
-  const docSize = data.docSize || '';
-  const subject = data.subject || '';
-  const docNo = data.docNo || '';
-  const standardNo = data.standardNo || '';
-  const internalPlannedDate = data.internalPlannedDate || '';
-  const clientPlannedDate = data.clientPlannedDate || '';
-  const submitToEntity = data.submitToEntity || '';
-  const revNo = data.revNo || '0';  // افتراضياً 0
-  const lastStatus = data.lastStatus || '';
-  const docOwner = originator;  // دائماً نفس قيمة originator
-  const orderFromCode = data.orderFromCode || '';
-
-  return `
-    <tr>
-      <td><input type="checkbox" class="rowCheckbox" /></td>
-      <td>
-        <select>
-          ${projects.map(p => `<option ${p === project ? 'selected' : ''}>${p}</option>`).join('')}
-        </select>
-      </td>
-      <td>
-        <select class="originatorSelect">
-          ${originators.map(o => `<option ${o === originator ? 'selected' : ''}>${o}</option>`).join('')}
-        </select>
-      </td>
-      <td>${createDropdown(originatorTypes, originatorType)}</td>
-      <td>${createDropdown(departments, department)}</td>
-      <td>${createDropdown(disciplines, discipline)}</td>
-      <td>
-        <select>
-          ${sections.map(s => `<option ${s === section ? 'selected' : ''}>${s}</option>`).join('')}
-        </select>
-      </td>
-      <td>${createDropdown(dmsPurposes, dmsPurpose)}</td>
-      <td>${createDropdown(weightRanks, weightRank)}</td>
-      <td>${createDropdown(docSizes, docSize)}</td>
-      <td><input type="text" value="${subject}" /></td>
-      <td><input type="text" value="${docNo}" /></td>
-      <td><input type="text" value="${standardNo}" /></td>
-      <td><input type="date" value="${internalPlannedDate}" /></td>
-      <td><input type="date" value="${clientPlannedDate}" /></td>
-      <td><input type="text" value="${submitToEntity}" /></td>
-      <td><input type="text" value="${revNo}" readonly /></td>  <!-- مقفولة -->
-      <td><input type="text" value="${lastStatus}" /></td>
-      <td><input type="text" value="${docOwner}" readonly /></td> <!-- مقفولة -->
-      <td><input type="text" value="${orderFromCode}" /></td>
-    </tr>
-  `;
-}
-
-
-function bindOriginatorChange() {
-  document.querySelectorAll('.originatorSelect').forEach(select => {
-    select.addEventListener('change', e => {
-      const tr = e.target.closest('tr');
-      if (!tr) return;
-
-      const originatorValue = e.target.value;
-
-      // 1. تحديث Doc Owner
-      const docOwnerInput = tr.querySelector('td:nth-child(19) input'); // Doc Owner
-      if (docOwnerInput) docOwnerInput.value = originatorValue;
-
-      // 2. تحديث Order From Code بناءً على Originator
-      const orderFromCodeInput = tr.querySelector('td:nth-child(20) input'); // Order From Code
-      if (orderFromCodeInput) {
-        let code = '';
-        if (originatorValue === "GE ENERGY POWER CONVERSION FRANCE SAS") code = "GEV";
-        else if (originatorValue === "EEPSP") code = "EEPSP";
-        else if (originatorValue === "Subcontractor") code = "SC1";
-        else if (originatorValue === "Supplier") code = "SP1";
-        orderFromCodeInput.value = code;
-      }
-      
+<script>
+  function hideAllContainers() {
+    document.getElementById('filterBox').style.display = 'none';
+    ['editContainer','deleteContainer','restoreContainer'].forEach(id => {
+      document.getElementById(id).style.display = 'none';
     });
-  });
-}
-
-
-// بعد إضافة صف جديد
-function addNewRow() {
-  if (!dropdownData) {
-    alert('Please wait until dropdown data loads.');
-    return;
+    document.getElementById('mainTable').style.display = 'inline-block';
   }
-  const rowHTML = createRow();
-  document.getElementById('tableBody').insertAdjacentHTML('beforeend', rowHTML);
-  bindOriginatorChange(); // اربط event لكل صف جديد
-  
-}
+  function toggleFilterBox() {
+    hideAllContainers();
+    const box = document.getElementById('filterBox');
+    box.style.display = (box.style.display === 'none' || box.style.display === '') ? 'block' : 'none';
+  }
+  function showContainer(id) {
+    hideAllContainers();
+    document.getElementById('mainTable').style.display = 'none';
+    document.getElementById(id).style.display = 'block';
+  }
+  function backToMain() {
+    hideAllContainers();
+  }
 
-
-function importExcelRows(jsonData) {
-  const tbody = document.getElementById('tableBody');
-  tbody.innerHTML = '';
-  jsonData.forEach(rowData => {
-    const rowHTML = createRow({
-      project: rowData['Project Name'],
-      originator: rowData['Originator'],
-      originatorType: rowData['Originator Type'],
-      department: rowData['Department'],
-      discipline: rowData['Discipline'],
-      section: rowData['Section'],
-      dmsPurpose: rowData['DMS Purpose'],
-      weightRank: rowData['Weight Rank'],
-      docSize: rowData['Doc Size'],
-      subject: rowData['Subject'],
-      docNo: rowData['Document No'],
-      standardNo: rowData['Standard No'],
-      internalPlannedDate: rowData['Internal Planned Date'] ? new Date(rowData['Internal Planned Date']).toISOString().slice(0,10) : '',
-      clientPlannedDate: rowData['Client Planned Date'] ? new Date(rowData['Client Planned Date']).toISOString().slice(0,10) : '',
-      submitToEntity: rowData['Submit To Entity'],
-      revNo: rowData['Rev No'],
-      lastStatus: data.lastStatus || 'Not Issued',
-      docOwner: rowData['Doc Owner'],
-      orderFromCode: rowData['Order From Code'],
+  let originators = [];
+  fetch('json/OrgData.json')
+    .then(res => res.json())
+    .then(data => {
+      originators = Array.isArray(data) ? data : [data];
+      const sel = document.getElementById('originator');
+      originators.forEach(o => {
+        const opt = document.createElement('option');
+        opt.value = o.Originator;
+        opt.textContent = o.Originator;
+        sel.appendChild(opt);
+      });
     });
-    tbody.insertAdjacentHTML('beforeend', rowHTML);
-    const newRow = tbody.lastElementChild;
-    bindOriginatorChange(newRow);
-  });
-}
 
-// عند تحميل JSON Dropdowns من الأول
-fetch('json/Dropdowns.json')
-  .then(res => res.json())
-  .then(data => {
-    dropdownData = data;
-    // ممكن تضيف هنا تهيئة الجدول لو حابب تبدأ بصف جديد
-  });
+  function generateRowsBySelection() {
+    const checkboxes = document.querySelectorAll('input[name="projectFilter"]:checked');
+    const numDocs = parseInt(document.getElementById('numDocs').value, 10) || 1;
+    let selectedProjects = Array.from(checkboxes).map(cb => cb.value);
 
-  function generateDocumentNumbers() {
-  const rows = document.querySelectorAll("#tableBody tr");
-  rows.forEach(row => {
-    const docSizeSelect = row.children[9].querySelector("select");  // العمود العاشر
-    const docSize = docSizeSelect ? docSizeSelect.value : '';
-    const docNoInput = row.children[11].querySelector("input");     // العمود 12
-      const standardNo = row.children[12].querySelector("input");     // العمود 13
-
-    if (docSize && docNoInput) {
-      const randomNumber = Math.floor(100000 + Math.random() * 900000); // 6 أرقام
-      docNoInput.value = `C${docSize}-${randomNumber}`;
-      standardNo.value = `C${docSize}-${randomNumber}`;
+    if (selectedProjects.includes('All')) {
+      selectedProjects = ['ARRASS', 'AL GHAT', 'AL Khafah'];
     }
-  });
-}
 
+    if (selectedProjects.length === 0) {
+      alert('Please select at least one project.');
+      return;
+    }
 
-  </script>
+    const selectedOriginatorName = document.getElementById('originator').value;
+    const selectedOriginator = originators.find(o => o.Originator === selectedOriginatorName);
+
+    const tbody = document.getElementById('tableBody');
+
+    selectedProjects.forEach(projectName => {
+      for (let i = 0; i < numDocs; i++) {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td class="action-icons">
+            <i class="fa fa-pen" onclick="enableRowEdit(this)"></i>
+            <i class="fa fa-trash" onclick="deleteRow(this)"></i>
+          </td>
+          <td>${projectName}</td>
+          <td>${selectedOriginator ? selectedOriginator.Originator : ''}</td>
+          <td>${selectedOriginator ? selectedOriginator['Originator Type'] : ''}</td>
+          <td contenteditable="false"></td>
+          <td contenteditable="false"></td>
+          <td contenteditable="false"></td>
+          <td>
+            <select class="doc-size">
+              <option value="CA">CA</option>
+              <option value="CB">CB</option>
+              <option value="CC">CC</option>
+              <option value="CD">CD</option>
+              <option value="CE">CE</option>
+            </select>
+          </td>
+          <td contenteditable="false"></td>
+          <td contenteditable="false"></td>
+          <td>
+            <select class="Purpose doc-size">
+              <option value="Approval">Approval</option>
+              <option value="informaion">informaion</option>
+              <option value="Internal">Internal</option>
+            </select>
+          </td>
+          <td contenteditable="false"><input type="date"></td>
+          <td contenteditable="false"><input type="date"></td>
+          <td>${selectedOriginator ? selectedOriginator['Submit To Entity'] : ''}</td>
+          <td>${selectedOriginator ? selectedOriginator['Order From Code'] : ''}</td>
+          <td>${selectedOriginator ? selectedOriginator['Order To Code'] : ''}</td>
+        `;
+        tbody.appendChild(tr);
+      }
+    });
+  }
+
+  function deleteRow(icon) {
+    icon.closest('tr').remove();
+  }
+
+  function enableRowEdit(icon) {
+    const row = icon.closest('tr');
+    const editableTds = row.querySelectorAll('td[contenteditable]');
+    const selectDocSize = row.querySelector('select.doc-size');
+    const Purpose = row.querySelector('select.Purpose');
+    
+    const isEditing = icon.classList.contains('fa-save');
+
+    if (!isEditing) {
+      editableTds.forEach(td => td.contentEditable = "true");
+      selectDocSize.disabled = false;
+      Purpose.disabled = false;
+      icon.classList.remove('fa-pen');
+      icon.classList.add('fa-save');
+    } else {
+      editableTds.forEach(td => td.contentEditable = "false");
+      selectDocSize.disabled = true;
+      Purpose.disabled = true;
+      icon.classList.remove('fa-save');
+      icon.classList.add('fa-pen');
+      alert('Row saved');
+    }
+  }
+</script>
 </body>
 </html>

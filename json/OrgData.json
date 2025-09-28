@@ -1,0 +1,51 @@
+[
+ {
+  "Originator": "GE ENERGY POWER CONVERSION FRANCE SAS",
+  "Originator Type": "Supplier",
+  "Submit To Entity": "EEPSP",
+  "Doc Owner": "GE ENERGY POWER CONVERSION FRANCE SAS",
+  "Order From Code": "GEV",
+  "Order To Code": "EEPSP"
+ },
+ {
+  "Originator": "EEPSP",
+  "Originator Type": "EEPSP",
+  "Submit To Entity": "Saudi Electricity Project Development Company",
+  "Doc Owner": "EEPSP",
+  "Order From Code": "EEPSP",
+  "Order To Code": "SEC"
+ },
+ {
+  "Originator": "Supplier",
+  "Originator Type": "Supplier",
+  "Submit To Entity": "EEPSP",
+  "Doc Owner": "Supplier",
+  "Order From Code": "SP1",
+  "Order To Code": "EEPSP"
+ },
+ {
+  "Originator": "Subcontractor",
+  "Originator Type": "Subcontractor",
+  "Submit To Entity": "EEPSP",
+  "Doc Owner": "Subcontractor",
+  "Order From Code": "SC1",
+  "Order To Code": "EEPSP"
+ },
+ {
+  "Originator": "Sieyuan Electric Co.,Ltd (Synchronous)",
+  "Originator Type": "Supplier",
+  "Submit To Entity": "EEPSP",
+  "Doc Owner": "Sieyuan Electric Co.,Ltd (Synchronous)",
+  "Order From Code": "SIL",
+  "Order To Code": "EEPSP"
+ },
+ {
+  "Originator": "AIEcon Gulf engineering consultants",
+  "Originator Type": "Consultant",
+  "Submit To Entity": "EEPSP",
+  "Doc Owner": "AIEcon Gulf engineering consultants",
+  "Order From Code": "AIG",
+  "Order To Code": "EEPSP"
+ }
+]
+
